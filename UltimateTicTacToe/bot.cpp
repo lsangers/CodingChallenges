@@ -2,10 +2,11 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
-#define outcome_t uint8_t
+#include "bot.h"
 
 using namespace std;
+using namespace UTTT;
+
 static const uint16_t masks[8] = {
     0b000'000'111,
     0b000'111'000,
@@ -23,9 +24,8 @@ class TinyBoard
 {
 public:
     uint16_t player_state[2] = {0b000'000'000, 0b000'000'000};
-    bool player_id = true;
 
-    bool isWin()
+    bool isWin(player_id_t player_id)
     {
         for (int i = 0; i < 8; i++)
         {
@@ -44,27 +44,27 @@ public:
      *   Draw = 3
      *   Win = player_id
      */
-    outcome_t calculateWinState()
+    winstate_t calculateWinState(player_id_t player_id)
     {
-        bool win = isWin();
+        bool win = isWin(player_id);
         bool r = win ^ 0b1;
 
         return (win * player_id + r * getAvailableMoves() + r * 2);
     }
 
-    outcome_t move(uint16_t move)
+    winstate_t move(player_id_t player_id, uint16_t move)
     {
         player_id != player_id;
         player_state[player_id] &= move;
 
-        return calculateWinState();
+        return calculateWinState(player_id);
     }
 };
 
 class BigBoard
 {
 public:
-    TinyBoard boards[9] = {};
+    UTTT::TinyBoard boards[9] = {};
 
 } board;
 
